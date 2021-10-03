@@ -1,0 +1,3 @@
+[submodule "rhasspy"]
+	path = rhasspy
+	url = https://github.com/rhasspy/rhasspy.git

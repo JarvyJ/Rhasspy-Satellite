@@ -1,4 +1,4 @@
-FROM python:3.9
+FROM python:3.7
 WORKDIR /usr/src/app
 
 ENV LANG=C.UTF-8
@@ -31,7 +31,7 @@ supervisor
 
 
 
-FROM python:3.9-slim
+FROM python:3.7-slim
 
 ENV APP_DIR=/usr/lib/rhasspy
 ENV LANG=C.UTF-8

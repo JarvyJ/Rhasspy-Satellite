@@ -1,3 +1,6 @@
 [submodule "rhasspy"]
 	path = rhasspy
 	url = https://github.com/rhasspy/rhasspy.git
+[submodule "skiffos"]
+	path = skiffos
+	url = https://github.com/skiffos/SkiffOS.git

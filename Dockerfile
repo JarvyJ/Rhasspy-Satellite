@@ -37,14 +37,14 @@ ENV APP_DIR=/usr/lib/rhasspy
 ENV LANG=C.UTF-8
 ENV PATH="/usr/lib/rhasspy/bin:$PATH"
 
-COPY rhasspy/etc/shflags ${APP_DIR}/etc/
-COPY rhasspy/VERSION rhasspy/RHASSPY_DIRS ${APP_DIR}/
-COPY rhasspy/bin/rhasspy-voltron rhasspy/bin/voltron-run ${APP_DIR}/bin/
-
 RUN apt-get update && \
     apt-get install --no-install-recommends --yes \
     alsa-utils mosquitto libsndfile1 portaudio19-dev && \
     rm -rf /var/lib/apt/lists/*
+
+COPY rhasspy/etc/shflags ${APP_DIR}/etc/
+COPY rhasspy/VERSION rhasspy/RHASSPY_DIRS ${APP_DIR}/
+COPY rhasspy/bin/rhasspy-voltron rhasspy/bin/voltron-run ${APP_DIR}/bin/
 
 COPY --from=0 ${APP_DIR} ${APP_DIR}
 COPY rhasspy/rhasspy-server-hermes/ ${APP_DIR}/rhasspy-server-hermes/

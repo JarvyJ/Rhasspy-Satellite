@@ -16,7 +16,7 @@ RUN apt-get update && \
 
 COPY rhasspy .
 
-RUN python -m venv ${APP_DIR} --copies
+RUN python -m venv ${APP_DIR}
 RUN pip install --no-cache-dir \
 rhasspy-hermes/ \
 rhasspy-microphone-pyaudio-hermes/ \

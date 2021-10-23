@@ -16,7 +16,6 @@ jobs:
 
     env:
       SKIFF_CONFIG: pi/4x64,apps/satellite
-      SKIFF_WORKSPACE: pi4
       PI_IMAGE: /tmp/rhasspy-satellite-pi4.img
 
     steps:

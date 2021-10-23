@@ -1,10 +1,13 @@
 name: Build System Images
 
 on:
-  workflow_run:
-    workflows: ["Docker"]
-    types:
-      - completed
+  schedule:
+    - cron: '36 3 * * *'
+  push:
+    branches: [ main ]
+    tags: [ '*.*.*' ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build:
@@ -16,6 +19,7 @@ jobs:
 
     env:
       SKIFF_CONFIG: pi/4x64,apps/satellite
+      SKIFF_WORKPLACE: pi4
       PI_IMAGE: /tmp/rhasspy-satellite-pi4.img
 
     steps:
@@ -39,7 +43,11 @@ jobs:
           pigz
 
       - name: Build Pi4 Image
-        run: make configure && make compile
+        run: |
+          export TERM=xterm
+          export BR2_CCACHE_DIR=${HOME}/br-cache/ccache
+          export BR2_DL_DIR=${HOME}/br-cache/dl
+          make configure && make compile
 
       - name: Make SD Image
         run: make cmd/pi/common/buildimage

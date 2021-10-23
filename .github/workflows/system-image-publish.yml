@@ -40,7 +40,7 @@ jobs:
           pigz
 
       - name: Build Pi4 Image
-        run: make configure compile
+        run: make configure && make compile
 
       - name: Make SD Image
         run: make cmd/pi/common/buildimage

@@ -1,0 +1,76 @@
+# For more options and information see
+# http://rpf.io/configtxt
+# Some settings may impact device functionality.
+
+# This is the default Skiff config.txt.
+# You should customize it to your own needs.
+# Create a Skiff config, and copy this file to:
+# my/config/resources/rpi/config.txt
+
+kernel=zImage
+initramfs rootfs.cpio.lz4
+
+# We always use the same names, the real used variant is selected by
+# BR2_PACKAGE_RPI_FIRMWARE_{DEFAULT,X,CD} choice
+start_file=start.elf
+fixup_file=fixup.dat
+
+# Enable GPIO features
+dtparam=i2c_arm=on
+dtparam=spi=on
+# dtparam=i2s=on
+
+# Add module parameters to the end of the dtoverlay line,
+# e.g. dtoverlay=lirc-rpi,gpio_in_pin=16,gpio_in_pull=high
+# dtoverlay=lirc-rpi
+
+# disable bt and enable uart on PL011 (UART0)
+dtoverlay=disable-bt
+
+# w1-gpio
+# If you require the external pullup
+# dtoverlay=w1-gpio-pullup,gpiopin=x,pullup=y
+# otherwise
+# dtoverlay=w1-gpio-pullup,gpiopin=x
+# (where x and y are gpios).
+
+# Audio card
+dtparam=audio=on
+# dtoverlay=hifiberry-dac
+# dtoverlay=hifiberry-dacplus
+# dtoverlay=hifiberry-digi
+# dtoverlay=iqaudio-dac
+# dtoverlay=iqaudio-dacplus
+
+# Heartbeat LED
+# dtparam=act_led_trigger=heartbeat
+
+# Allow the board to draw additional voltage.
+# Note: this sets a permanent overclock canary bit on the Pi.
+# over_voltage=4
+
+# Forces the CPU to run at maximum clock speed (expect heat)
+# force_turbo=1
+
+# Forces CPU to run in turbo for initial seconds
+# initial_turbo=45
+
+# dont wait! defaults to 1s.
+boot_delay=0
+
+[pi4]
+# dtoverlay=vc4-kms-v3d-pi4
+dtoverlay=vc4-fkms-v3d
+max_framebuffers=2
+arm_64bit=1
+kernel=Image
+
+[all]
+enable_uart=1
+disable_overscan=1
+hdmi_drive=2
+gpu_mem=16
+
+# skiff extension files (todo)
+# include skiff-boardcfg.txt
+# include skiff-usercfg.txt

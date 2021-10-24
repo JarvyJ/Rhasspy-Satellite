@@ -17,15 +17,15 @@ jobs:
         run: |
           export IMAGE_ID=$(curl -X GET \
           -H 'Content-Type: application/json' \
-          -H 'Authorization: Bearer ${{ secrets.DO_PAT }}' \
+          -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
           "https://api.digitalocean.com/v2/snapshots" | jq '.snapshots[] | select(.name=="pi4-github-action") | .id')
           
           echo $IMAGE_ID
           
           export DROPLET_ID=$(curl -X POST \
           -H 'Content-Type: application/json' \
-          -H 'Authorization: Bearer ${{ secrets.DO_PAT }}' \
-          -d "{\"name\":\"pi4\",\"region\":\"nyc1\",\"size\":\"s-4vcpu-8gb-amd\",\"image\":$IMAGE_ID}" \
+          -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
+          -d "{\"name\":\"pi4\",\"region\":\"nyc1\",\"size\":\"c-4-8gib\",\"image\":$IMAGE_ID}" \
           "https://api.digitalocean.com/v2/droplets" | jq .droplet.id)
           
           echo "::set-output droplet_id=$DROPLET_ID"
@@ -83,13 +83,16 @@ jobs:
     env:
       DIGITALOCEAN_TOKEN: ${{ secrets.DO_PAT }}
     steps:
-      - name: Shutdwon Droplet
+      - name: Shutdown Droplet
         run: |
           curl -X POST \
           -H "Content-Type: application/json" \
           -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
           -d '{"type":"shutdown"}' \
-          "https://api.digitalocean.com/v2/droplets/${{ needs.setup-runner.output.droplet_id }}/actions"
+          "https://api.digitalocean.com/v2/droplets/${{ needs.setup-runner.outputs.droplet_id }}/actions"
+          
+      - name: wait 1m for shutdown
+        run: sleep 60
           
       - name: Poweroff Droplet
         run: |
@@ -97,11 +100,14 @@ jobs:
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
             -d '{"type":"power_off"}' \
-            "https://api.digitalocean.com/v2/droplets/${{ needs.setup-runner.output.droplet_id }}/actions"
+            "https://api.digitalocean.com/v2/droplets/${{ needs.setup-runner.outputs.droplet_id }}/actions"
+
+      - name: wait 20s for power_off
+        run: sleep 20
 
       - name: Delete Droplet
         run: |
           curl -X DELETE \
           -H "Content-Type: application/json" \
           -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
-          "https://api.digitalocean.com/v2/droplets/${{ needs.setup-runner.output.droplet_id }}"
+          "https://api.digitalocean.com/v2/droplets/${{ needs.setup-runner.outputs.droplet_id }}"

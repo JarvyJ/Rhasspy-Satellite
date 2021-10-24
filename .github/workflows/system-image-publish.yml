@@ -32,7 +32,7 @@ jobs:
           make configure && make compile
 
       - name: Make SD Image
-        run: sudo TERM=xterm PI_IMAGE=/tmp/rhasspy-satellite-pi4.img make cmd/satellite/buildimage
+        run: sudo TERM=xterm PI_IMAGE=/tmp/rhasspy-satellite-pi4.img make cmd/apps/satellite/buildimage
 
       - name: Compress SD Image
         run: pigz -9 $PI_IMAGE

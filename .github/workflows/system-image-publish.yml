@@ -6,9 +6,27 @@ on:
     tags: [ '*.*.*' ]
 
 jobs:
+  setup-runner:
+    runs-on: ubuntu-latest
+    outputs:
+      droplet_id: ${{ steps.make-droplet.outputs.droplet_id }}
+    env:
+      DIGITALOCEAN_TOKEN: ${{ secrets.DO_PAT }}
+    steps:
+      - id: make-droplet
+        run: |
+          DROPLET_ID=$(curl -X POST \
+          -H "Content-Type: application/json" \
+          -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
+          -d '{"name":"pi4","region":"nyc1","size":"s-4vcpu-8gb-amd","image":"pi4-github-action"}' \
+          "https://api.digitalocean.com/v2/droplets" | jq .droplet.id)
+          echo "::set-output droplet_id=$DROPLET_ID"
+
+
   build-system-image:
 
     runs-on: [self-hosted, pi4]
+    needs: setup-runner
     timeout-minutes: 2880
     permissions:
       contents: read
@@ -50,3 +68,32 @@ jobs:
         with:
           name: rhasspy-satellite-pi4.img
           path: /tmp/rhasspy-satellite-pi4.img.gz
+          
+  teardown-runner:
+    runs-on: ubuntu-latest
+    needs: [setup-runner, build-system-image]
+    env:
+      DIGITALOCEAN_TOKEN: ${{ secrets.DO_PAT }}
+    steps:
+      - name: Shutdwon Droplet
+        run: |
+          curl -X POST \
+          -H "Content-Type: application/json" \
+          -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
+          -d '{"type":"shutdown"}' \
+          "https://api.digitalocean.com/v2/droplets/${{ needs.setup-runner.output.droplet_id }}/actions"
+          
+      - name: Poweroff Droplet
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
+            -d '{"type":"power_off"}' \
+            "https://api.digitalocean.com/v2/droplets/${{ needs.setup-runner.output.droplet_id }}/actions"
+
+      - name: Delete Droplet
+        run: |
+          curl -X DELETE \
+          -H "Content-Type: application/json" \
+          -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
+          "https://api.digitalocean.com/v2/droplets/${{ needs.setup-runner.output.droplet_id }}"

@@ -34,11 +34,8 @@ jobs:
       - name: Make SD Image
         run: sudo TERM=xterm PI_IMAGE=/tmp/rhasspy-satellite-pi4.img make cmd/apps/satellite/buildimage
 
-      - name: Compress SD Image
-        run: pigz -9 $PI_IMAGE
-
       - name: Upload!
         uses: actions/upload-artifact@v2
         with:
-          name: rhasspy-satellite-pi4.img.gz
-          path: /tmp/rhasspy-satellite-pi4.img.gz
+          name: rhasspy-satellite-pi4.img
+          path: /tmp/rhasspy-satellite-pi4.img

@@ -15,12 +15,14 @@ jobs:
         env:
           DIGITALOCEAN_TOKEN: ${{ secrets.DO_PAT }}
         run: |
-          IMAGE_ID=$(curl -v -X GET \
+          export IMAGE_ID=$(curl -X GET \
           -H 'Content-Type: application/json' \
           -H 'Authorization: Bearer ${{ secrets.DO_PAT }}' \
           "https://api.digitalocean.com/v2/snapshots" | jq '.snapshots[] | select(.name=="pi4-github-action") | .id')
-
-          DROPLET_ID=$(curl -X POST \
+          
+          echo $IMAGE_ID
+          
+          export DROPLET_ID=$(curl -v -X POST \
           -H 'Content-Type: application/json' \
           -H 'Authorization: Bearer ${{ secrets.DO_PAT }}' \
           -d '{"name":"pi4","region":"nyc1","size":"s-4vcpu-8gb-amd","image":$IMAGE_ID}' \

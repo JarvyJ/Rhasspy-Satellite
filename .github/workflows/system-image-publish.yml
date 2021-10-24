@@ -91,6 +91,7 @@ jobs:
     
     runs-on: ubuntu-latest
     needs: [setup-runner, build-system-image]
+    #if: always() # shutdown the droplets even on failure
     env:
       DIGITALOCEAN_TOKEN: ${{ secrets.DO_PAT }}
     steps:

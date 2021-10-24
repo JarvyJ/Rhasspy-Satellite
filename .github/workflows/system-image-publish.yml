@@ -15,11 +15,19 @@ jobs:
     steps:
       - id: make-droplet
         run: |
+          IMAGE_ID=$(curl -X GET \
+          -H 'Content-Type: application/json' \
+          -H 'Authorization: Bearer $DIGITALOCEAN_TOKEN' \
+          "https://api.digitalocean.com/v2/snapshots" | jq '.snapshots[] | select(.name=="pi4-github-action") | .id')
+          
+          
           DROPLET_ID=$(curl -X POST \
           -H "Content-Type: application/json" \
           -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
-          -d '{"name":"pi4","region":"nyc1","size":"s-4vcpu-8gb-amd","image":"pi4-github-action"}' \
+          -d '{"name":"pi4","region":"nyc1","size":"s-4vcpu-8gb-amd","image":$IMAGE_ID}' \
           "https://api.digitalocean.com/v2/droplets" | jq .droplet.id)
+          
+          
           echo "::set-output droplet_id=$DROPLET_ID"
 
 

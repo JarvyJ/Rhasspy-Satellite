@@ -17,7 +17,6 @@ jobs:
     env:
       SKIFF_CONFIG: pi/4x64,apps/satellite
       SKIFF_WORKPLACE: pi4
-      PI_IMAGE: /tmp/rhasspy-satellite-pi4.img
 
     steps:
       - name: Checkout repository
@@ -33,7 +32,7 @@ jobs:
           make configure && make compile
 
       - name: Make SD Image
-        run: make cmd/pi/common/buildimage
+        run: sudo PI_IMAGE=/tmp/rhasspy-satellite-pi4.img make cmd/satellite/buildimage
 
       - name: Compress SD Image
         run: pigz -9 $PI_IMAGE
@@ -41,5 +40,5 @@ jobs:
       - name: Upload!
         uses: actions/upload-artifact@v2
         with:
-          name: rhasspy-satellites
-          path: /tmp
+          name: rhasspy-satellite-pi4.img.gz
+          path: /tmp/rhasspy-satellite-pi4.img.gz

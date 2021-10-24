@@ -43,7 +43,7 @@ jobs:
         run: sudo TERM=xterm PI_IMAGE=/tmp/rhasspy-satellite-pi4.img make cmd/apps/satellite/buildimage
 
       - name: Gzip the SD Image
-        run: pigz -9 /tmp/rhasspy-satellite-pi4.img
+        run: pigz -9 -f -k /tmp/rhasspy-satellite-pi4.img
 
       - name: Upload!
         uses: actions/upload-artifact@v2

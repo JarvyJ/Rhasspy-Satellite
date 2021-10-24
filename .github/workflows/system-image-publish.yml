@@ -24,6 +24,14 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Cache Buildroot compile cache + dls
+        uses: actions/cache@v2
+        with:
+          path: ~/br-cache
+          key: ${{ runner.os }}-buildroot-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildroot-
+
       - name: Build Pi4 Image
         run: |
           export TERM=xterm
@@ -34,8 +42,11 @@ jobs:
       - name: Make SD Image
         run: sudo TERM=xterm PI_IMAGE=/tmp/rhasspy-satellite-pi4.img make cmd/apps/satellite/buildimage
 
+      - name: Gzip the SD Image
+        run: pigz -9 /tmp/rhasspy-satellite-pi4.img
+
       - name: Upload!
         uses: actions/upload-artifact@v2
         with:
           name: rhasspy-satellite-pi4.img
-          path: /tmp/rhasspy-satellite-pi4.img
+          path: /tmp/rhasspy-satellite-pi4.img.gz

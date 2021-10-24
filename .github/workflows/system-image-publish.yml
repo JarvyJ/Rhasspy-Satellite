@@ -22,11 +22,11 @@ jobs:
           
           echo $IMAGE_ID
           
-          curl -v -X POST \
+          export DROPLET_ID=$(curl -X POST \
           -H 'Content-Type: application/json' \
           -H 'Authorization: Bearer ${{ secrets.DO_PAT }}' \
-          -d "{\"name\":\"pi4\",\"region\":\"nyc1\",\"size\":\"s-1vcpu-1gb\",\"image\":$IMAGE_ID}" \
-          "https://api.digitalocean.com/v2/droplets"
+          -d "{\"name\":\"pi4\",\"region\":\"nyc1\",\"size\":\"s-4vcpu-8gb-amd\",\"image\":$IMAGE_ID}" \
+          "https://api.digitalocean.com/v2/droplets" | jq .droplet.id)
           
           echo "::set-output droplet_id=$DROPLET_ID"
 

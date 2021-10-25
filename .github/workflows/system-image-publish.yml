@@ -6,40 +6,40 @@ on:
     tags: [ '*.*.*' ]
 
 jobs:
-#   setup-runner:
-#     strategy:
-#       fail-fast: false
-#       matrix:
-#         system: [pi0, pi4]
+  setup-runner:
+    strategy:
+      fail-fast: false
+      matrix:
+        system: [pi0, pi3, pi4]
 
-#     runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-#     steps:
-#       - id: make-droplet
-#         env:
-#           DIGITALOCEAN_TOKEN: ${{ secrets.DO_PAT }}
-#         run: |
-#           export IMAGE_ID=$(curl -X GET \
-#           -H 'Content-Type: application/json' \
-#           -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
-#           "https://api.digitalocean.com/v2/snapshots" | jq '.snapshots[] | select(.name=="${{ matrix.system }}-github-action") | .id')
+    steps:
+      - id: make-droplet
+        env:
+          DIGITALOCEAN_TOKEN: ${{ secrets.DO_PAT }}
+        run: |
+          export IMAGE_ID=$(curl -X GET \
+          -H 'Content-Type: application/json' \
+          -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
+          "https://api.digitalocean.com/v2/snapshots" | jq '.snapshots[] | select(.name=="${{ matrix.system }}-github-action") | .id')
           
-#           echo $IMAGE_ID
+          echo $IMAGE_ID
           
-#           curl -X POST \
-#           -H 'Content-Type: application/json' \
-#           -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
-#           -d "{\"name\":\"${{ matrix.system }}\",\"region\":\"nyc1\",\"size\":\"c-4\",\"image\":$IMAGE_ID}" \
-#           "https://api.digitalocean.com/v2/droplets"
+          curl -X POST \
+          -H 'Content-Type: application/json' \
+          -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
+          -d "{\"name\":\"${{ matrix.system }}\",\"region\":\"nyc1\",\"size\":\"c-4\",\"image\":$IMAGE_ID}" \
+          "https://api.digitalocean.com/v2/droplets"
 
   build-system-image:
     strategy:
       fail-fast: false
       matrix:
-        system: [pi0, pi4]
+        system: [pi0, pi3, pi4]
 
     runs-on: [self-hosted, "${{ matrix.system }}"]
-#     needs: setup-runner
+    needs: setup-runner
     timeout-minutes: 2880
     permissions:
       contents: read
@@ -63,7 +63,7 @@ jobs:
         id: vars
         run: |
           echo ::set-output name=arch::\
-          $(echo '{ "pi0": "pi/0", "pi3": "pi/3", "pi4": "pi4x64" }' | jq -r 'to_entries[] | select(.key=="${{ matrix.system }}") | .value')
+          $(echo '{ "pi0": "pi/0", "pi3": "pi/3", "pi4": "pi/4x64" }' | jq -r 'to_entries[] | select(.key=="${{ matrix.system }}") | .value')
 
       - name: Build ${{ matrix.system }} Image
         run: |
@@ -82,19 +82,18 @@ jobs:
       - name: Upload!
         uses: actions/upload-artifact@v2
         with:
-          name: rhasspy-satellite-${{ matrix.system }}.img
+          name: rhasspy-satellite-${{ matrix.system }}.img.gz
           path: /tmp/rhasspy-satellite-${{ matrix.system }}.img.gz
           
   teardown-runner:
     strategy:
       fail-fast: false
       matrix:
-        system: [pi0, pi4]
+        system: [pi0, pi3, pi4]
     
     runs-on: ubuntu-latest
-#     needs: [setup-runner, build-system-image]
-    needs: [build-system-image]
-    #if: always() # shutdown the droplets even on failure
+    needs: [setup-runner, build-system-image]
+    if: always() # shutdown the droplets even on failure
     env:
       DIGITALOCEAN_TOKEN: ${{ secrets.DO_PAT }}
     steps:

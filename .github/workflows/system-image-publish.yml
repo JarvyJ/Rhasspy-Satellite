@@ -26,11 +26,11 @@ jobs:
           
           echo $IMAGE_ID
           
-          export DROPLET_ID=$(curl -X POST \
+          curl -X POST \
           -H 'Content-Type: application/json' \
           -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
           -d "{\"name\":\"${{ matrix.system }}\",\"region\":\"nyc1\",\"size\":\"c-4-8gib\",\"image\":$IMAGE_ID}" \
-          "https://api.digitalocean.com/v2/droplets" | jq .droplet.id)
+          "https://api.digitalocean.com/v2/droplets"
 
   build-system-image:
     strategy:

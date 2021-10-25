@@ -5,7 +5,8 @@ After=network.target
 Wants=network.target
 
 [Service]
-Type=forking
+Type=simple
+Environment="PATH=/usr/lib/rhasspy/bin:/usr/bin:/usr/sbin"
 ExecStart=/usr/lib/rhasspy/bin/rhasspy-voltron --user-profiles /mnt/persist/profiles --profile en
 Restart=on-failure
 RestartSec=15

@@ -6,31 +6,31 @@ on:
     tags: [ '*.*.*' ]
 
 jobs:
-  setup-runner:
-    strategy:
-      fail-fast: false
-      matrix:
-        system: [pi0, pi4]
+#   setup-runner:
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         system: [pi0, pi4]
 
-    runs-on: ubuntu-latest
+#     runs-on: ubuntu-latest
 
-    steps:
-      - id: make-droplet
-        env:
-          DIGITALOCEAN_TOKEN: ${{ secrets.DO_PAT }}
-        run: |
-          export IMAGE_ID=$(curl -X GET \
-          -H 'Content-Type: application/json' \
-          -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
-          "https://api.digitalocean.com/v2/snapshots" | jq '.snapshots[] | select(.name=="${{ matrix.system }}-github-action") | .id')
+#     steps:
+#       - id: make-droplet
+#         env:
+#           DIGITALOCEAN_TOKEN: ${{ secrets.DO_PAT }}
+#         run: |
+#           export IMAGE_ID=$(curl -X GET \
+#           -H 'Content-Type: application/json' \
+#           -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
+#           "https://api.digitalocean.com/v2/snapshots" | jq '.snapshots[] | select(.name=="${{ matrix.system }}-github-action") | .id')
           
-          echo $IMAGE_ID
+#           echo $IMAGE_ID
           
-          curl -X POST \
-          -H 'Content-Type: application/json' \
-          -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
-          -d "{\"name\":\"${{ matrix.system }}\",\"region\":\"nyc1\",\"size\":\"c-4\",\"image\":$IMAGE_ID}" \
-          "https://api.digitalocean.com/v2/droplets"
+#           curl -X POST \
+#           -H 'Content-Type: application/json' \
+#           -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
+#           -d "{\"name\":\"${{ matrix.system }}\",\"region\":\"nyc1\",\"size\":\"c-4\",\"image\":$IMAGE_ID}" \
+#           "https://api.digitalocean.com/v2/droplets"
 
   build-system-image:
     strategy:
@@ -39,14 +39,18 @@ jobs:
         system: [pi0, pi4]
 
     runs-on: [self-hosted, "${{ matrix.system }}"]
-    needs: setup-runner
+#     needs: setup-runner
     timeout-minutes: 2880
     permissions:
       contents: read
       packages: write
 
     env:
-      SKIFF_CONFIG: ${{ fromJson('{ "pi0":\ "pi/0", "pi3":\ "pi/3", "pi4":\ "pi/4x64" }')[matrix.system] }},apps/satellite
+      PI_CONFIGS: | 
+        { "pi0": "pi/0", 
+        "pi3": "pi/3",
+        "pi4": "pi/4x64" }
+      SKIFF_CONFIG: ${{ fromJson(env.PI_CONFIGS)[matrix.system] }},apps/satellite
       SKIFF_WORKPLACE: ${{ matrix.system }}
 
     steps:

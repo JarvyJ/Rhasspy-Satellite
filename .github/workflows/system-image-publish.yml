@@ -2,7 +2,6 @@ name: Build System Images
 
 on:
   push:
-    branches: [ main ]
     tags: [ '*.*.*' ]
 
 jobs:

@@ -46,8 +46,7 @@ jobs:
       packages: write
 
     env:
-      PI_MAP: '{ "pi0": "pi/0", "pi3": "pi/3", "pi4": "pi/4x64" }'
-      SKIFF_CONFIG: ${{ fromJson(env.PI_MAP)[matrix.system] }},apps/satellite
+      SKIFF_CONFIG: ${{ fromJson('{ "pi0":\ "pi/0", "pi3":\ "pi/3", "pi4":\ "pi/4x64" }')[matrix.system] }},apps/satellite
       SKIFF_WORKPLACE: ${{ matrix.system }}
 
     steps:

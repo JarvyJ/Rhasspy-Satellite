@@ -57,6 +57,7 @@ jobs:
           key: ${{ runner.os }}-buildroot-${{ matrix.system }}-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildroot-${{ matrix.system }}-
+            ${{ runner.os }}-buildroot-
 
       - name: Set arch var
         id: vars

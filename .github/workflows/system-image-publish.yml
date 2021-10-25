@@ -45,14 +45,6 @@ jobs:
       contents: read
       packages: write
 
-    env:
-      PI_CONFIGS: | 
-        { "pi0": "pi/0", 
-        "pi3": "pi/3",
-        "pi4": "pi/4x64" }
-      SKIFF_CONFIG: ${{ fromJson(env.PI_CONFIGS)[matrix.system] }},apps/satellite
-      SKIFF_WORKPLACE: ${{ matrix.system }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -67,8 +59,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildroot-${{ matrix.system }}-
 
+      - name: Set arch var
+        id: vars
+        run: |
+          echo ::set-output name=arch::\
+          $(echo '{ "pi0": "pi/0", "pi3": "pi/3", "pi4": "pi4x64" }' | jq -r 'to_entries[] | select(.key=="${{ matrix.system }}") | .value')
+
       - name: Build ${{ matrix.system }} Image
         run: |
+          export SKIFF_CONFIG=${{ steps.vars.outputs.arch }},apps/satellite
           export TERM=xterm
           export BR2_CCACHE_DIR=${HOME}/br-cache/ccache
           export BR2_DL_DIR=${HOME}/br-cache/dl

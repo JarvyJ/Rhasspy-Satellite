@@ -82,7 +82,7 @@ jobs:
       - name: Upload!
         uses: actions/upload-artifact@v2
         with:
-          name: rhasspy-satellite-${{ matrix.system }}.img
+          name: rhasspy-satellite-${{ matrix.system }}.img.gz
           path: /tmp/rhasspy-satellite-${{ matrix.system }}.img.gz
           
   teardown-runner:

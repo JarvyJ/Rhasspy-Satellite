@@ -1,1 +1,1 @@
-export PATH=/usr/lib/rhasspy/bin:$PATH
+export PATH=/mnt/persist/rhasspy/bin:$PATH

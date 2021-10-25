@@ -1,8 +1,10 @@
 #!/bin/bash
 
 echo "[apps/satellite] Extracting rhasspy satellite virtual environment from docker image"
+
+IMAGES_DIR=${BUILDROOT_DIR}/images
+RHASSPY_OUT_DIR=${IMAGES_DIR}/persist_part/rhasspy
 SRC_ROOT_DIR=$SKIFF_WORKSPACE_DIR/target
-RHASSPY_OUT_DIR=$SRC_ROOT_DIR/usr/lib/rhasspy
 DOCKER_PLATFORM=linux/amd64
 
 case $SKIFF_CONFIG in
@@ -36,3 +38,7 @@ cp $SKIFF_CURRENT_CONF_DIR/hooks/soundfile.py $RHASSPY_OUT_DIR/lib/python3.9/sit
 
 # disable mosquitto from starting at boot (rhasspy-supervisor/supervisord will start this if needed)
 rm -f $SRC_ROOT_DIR/usr/lib/systemd/system/mosquitto.service
+
+# hacks to get supervisor to actually work
+unlink $SRC_ROOT_DIR/usr/lib/rhasspy || true
+ln -s /mnt/persist/rhasspy $SRC_ROOT_DIR/usr/lib/rhasspy

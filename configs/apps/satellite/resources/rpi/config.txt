@@ -21,8 +21,6 @@ dtparam=audio=on
 
 # dont wait! defaults to 1s.
 boot_delay=0
-disable_splash=1
-dtoverlay=sdtweak,overclock_50=80
 
 [pi4]
 # dtoverlay=vc4-kms-v3d-pi4

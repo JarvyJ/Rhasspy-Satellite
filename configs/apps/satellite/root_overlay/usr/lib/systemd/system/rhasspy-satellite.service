@@ -6,8 +6,8 @@ Wants=network.target
 
 [Service]
 Type=simple
-Environment="PATH=/usr/lib/rhasspy/bin:/usr/bin:/usr/sbin"
-ExecStart=/usr/lib/rhasspy/bin/rhasspy-voltron --user-profiles /mnt/persist/profiles --profile en
+Environment="PATH=/mnt/persist/rhasspy/bin:/usr/bin:/usr/sbin"
+ExecStart=/mnt/persist/rhasspy/bin/rhasspy-voltron --user-profiles /mnt/persist/profiles --profile en
 Restart=on-failure
 RestartSec=15
 TimeoutStartSec=infinity

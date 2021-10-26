@@ -2,6 +2,7 @@
 This repo contains code to build a standalone Rhasspy satellite image. It allows you to easily add a seconday Pi as a satellite image to your [Rhasspy](https://rhasspy.readthedocs.io) instance. Since the image is trying to be as lean as possible, the satellite is only setup to handle wakewords, and will have to offload everything else to the main Rhaspsy instance.  You just need to flash it, setup your networking, and start it up. From there, plug in your microphone, and [setup the satellite](https://rhasspy.readthedocs.io/en/latest/tutorials/#shared-mqtt-broker)!
 
 Currently targetting Raspberry Pi 0W, 3, and 4.
+It currently has all wakeword engines installed (TODO: verify that they all work...)
 
 The Rhasspy Satellite image is built on top of the [Skiff platform](https://github.com/skiffos/skiffos) for embedded systems, and will one day be integrated with [Home Intent](https://homeintent.jarvy.io).
 
@@ -31,7 +32,7 @@ We also provide a thinned down Rhasspy docker image that can be used as a satell
 Once more of the following are figured out, and things are stabilized, I'll consider it out of beta:
 
  - [X] ~~Get images auto built for Pi 0W, 3, and 4~~
- - [ ] Support more of the wakeword options
+ - [X] ~~Support more of the wakeword options~~
  - [ ] Figure out how internationalizaion should work (mostly for wakeword systems. Everything else will be handled by the main Rhasspy image).
 
 Some research needs to go into the following to ensure it is possible and can run in an embedded environment

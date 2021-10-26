@@ -11,13 +11,15 @@ ENV APP_DIR=/usr/lib/rhasspy
 
 RUN apt-get update && \
     apt-get install --no-install-recommends --yes \
-    portaudio19-dev && \
+    portaudio19-dev python3-numpy python3-scipy && \
     rm -rf /var/lib/apt/lists/*
 
 COPY rhasspy .
 
-RUN python -m venv ${APP_DIR}
-RUN pip install --no-cache-dir \
+RUN python -m venv ${APP_DIR} && \
+    cp -r /usr/lib/python3/dist-packages/numpy* ${APP_DIR}/lib/python3.9/site-packages/ && \
+    cp -r /usr/lib/python3/dist-packages/scipy* ${APP_DIR}/lib/python3.9/site-packages/ && \
+    pip install --no-cache-dir \
 rhasspy-hermes/ \
 rhasspy-microphone-pyaudio-hermes/ \
 rhasspy-speakers-cli-hermes/ \
@@ -26,12 +28,12 @@ rhasspy-server-hermes/ \
 rhasspy-supervisor/ \
 rhasspy-wake-porcupine-hermes/ \
 rhasspy-wake-precise-hermes/ \
-rhasspy-wake-raven/ \
 rhasspy-wake-snowboy-hermes/ \
-supervisor
+supervisor \
+python_speech_features==0.6
 
 # there's a weird version mismatch going on with this guy and rhasspy-wake-raven
-RUN pip install --no-cache-dir --no-deps rhasspy-wake-raven-hermes/
+RUN pip install --no-cache-dir --no-deps rhasspy-wake-raven/ rhasspy-wake-raven-hermes/
 
 FROM python:3.9-slim
 

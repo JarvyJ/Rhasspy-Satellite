@@ -28,7 +28,7 @@ jobs:
           curl -X POST \
           -H 'Content-Type: application/json' \
           -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
-          -d "{\"name\":\"${{ matrix.system }}\",\"region\":\"nyc1\",\"size\":\"c-4\",\"image\":$IMAGE_ID}" \
+          -d "{\"name\":\"${{ matrix.system }}\",\"region\":\"nyc1\",\"size\":\"s-4vcpu-8gb-amd\",\"image\":$IMAGE_ID}" \
           "https://api.digitalocean.com/v2/droplets"
 
   build-system-image:

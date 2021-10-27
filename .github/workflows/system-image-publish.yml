@@ -103,7 +103,7 @@ jobs:
           export IMAGE_ID=$(curl -X GET \
           -H 'Content-Type: application/json' \
           -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
-          "https://api.digitalocean.com/v2/droplets" | jq '.droplets[] | select(.name=="${{ matrix.system }}") | .id')
+          "https://api.digitalocean.com/v2/droplets" | jq '.droplets[] | select(.name | startswith("${{ matrix.system }}")) | .id')
           
           echo "::set-output name=droplet_id::$IMAGE_ID"
     

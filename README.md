@@ -4,7 +4,7 @@ This repo contains code to build a standalone Rhasspy satellite image. It allows
 Currently targetting Raspberry Pi 0W, 3, and 4.
 It currently has all wakeword engines installed (TODO: verify that they all work...)
 
-The Rhasspy Satellite image is built on top of the [Skiff platform](https://github.com/skiffos/skiffos) for embedded systems, and will one day be integrated with [Home Intent](https://homeintent.jarvy.io).
+The Rhasspy Satellite image is built on top of the [Skiff platform](https://github.com/skiffos/skiffos) for embedded systems, and will one day be integrated with [Home Intent](https://homeintent.io).
 
 ## Installation
 The main way to install it is to grab the latest system image from the [Releases](https://github.com/JarvyJ/Rhasspy-Satellite/releases) page, and flash it to your Raspberry Pi. I recommend using the [Raspberry Pi Imager](https://www.raspberrypi.com/news/raspberry-pi-imager-imaging-utility/) with the "Custom" image option.

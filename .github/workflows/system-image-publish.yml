@@ -80,7 +80,7 @@ jobs:
         run: pigz -9 -f -k /tmp/rhasspy-satellite-${{ matrix.system }}.img
 
       - name: Upload!
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: rhasspy-satellite-${{ matrix.system }}.img.gz
           path: /tmp/rhasspy-satellite-${{ matrix.system }}.img.gz
